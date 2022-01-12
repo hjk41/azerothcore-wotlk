@@ -300,6 +300,11 @@ public:
     // FG: evil hacks
     void BroadcastGroupUpdate(void);
 
+    // playerbot mod
+    uint64 GetTargetIcon(int index) { return m_targetIcons[index]; }
+    Rolls* GetRolls() { return &RollId; }
+    // end playerbot mod
+
     // LFG
     void AddLfgBuffFlag() { m_lfgGroupFlags |= GROUP_LFG_FLAG_APPLY_RANDOM_BUFF; }
     void AddLfgRandomInstanceFlag() { m_lfgGroupFlags |= GROUP_LFG_FLAG_IS_RANDOM_INSTANCE; }

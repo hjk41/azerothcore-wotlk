@@ -42,6 +42,11 @@
 #include "WeatherMgr.h"
 #include "Tokenize.h"
 
+// playerbot mod
+#include "../../modules/bot/playerbot/playerbot.h"
+#include "../../modules/bot/playerbot/GuildTaskMgr.h"
+// end playerbot mod
+
 // TODO: this import is not necessary for compilation and marked as unused by the IDE
 //  however, for some reasons removing it would cause a damn linking issue
 //  there is probably some underlying problem with imports which should properly addressed
@@ -134,7 +139,12 @@ public:
             { "playall",           HandlePlayAllCommand,           SEC_GAMEMASTER,         Console::No  },
             { "skirmish",          HandleSkirmishCommand,          SEC_ADMINISTRATOR,      Console::No  },
             { "mailbox",           HandleMailBoxCommand,           SEC_MODERATOR,          Console::No  },
-            { "string",            HandleStringCommand,            SEC_GAMEMASTER,         Console::No  }
+            { "string",            HandleStringCommand,            SEC_GAMEMASTER,         Console::No  },
+
+            // playerbot mod
+			{ "rndbot",				SEC_GAMEMASTER,         true,  &RandomPlayerbotMgr::HandlePlayerbotConsoleCommand,     "" },
+			{ "bot",				SEC_PLAYER,				false, &PlayerbotMgr::HandlePlayerbotMgrCommand,               "" },
+			{ "gtask",				SEC_GAMEMASTER,         true,  &GuildTaskMgr::HandleConsoleCommand,           "" },
         };
 
         return commandTable;

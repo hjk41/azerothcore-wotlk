@@ -50,6 +50,25 @@ CollectIncludeDirectories(
 target_include_directories(worldserver
   PUBLIC
     ${PUBLIC_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/modules/bot
+    ${CMAKE_SOURCE_DIR}/modules/bot/pch
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/actions
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/DK
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/druid
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/generic
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/hunter
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/mage
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/paladin
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/priest
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/rogue
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/shaman
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/triggers
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/values
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/values/formations
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/warlock
+    ${CMAKE_SOURCE_DIR}/modules/bot/playerbot/strategy/warrior
   PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR})
 

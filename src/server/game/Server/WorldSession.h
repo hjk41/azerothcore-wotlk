@@ -230,6 +230,14 @@ class CharacterCreateInfo
     friend class Player;
 
 protected:
+    // playerbot mod
+    CharacterCreateInfo(std::string const& name, uint8 race, uint8 cclass, uint8 gender, uint8 skin, uint8 face,
+                        uint8 hairStyle, uint8 hairColor, uint8 facialHair, uint8 outfitId, WorldPacket& data)
+                         : Name(name), Race(race), Class(cclass), Gender(gender), Skin(skin), Face(face),
+                           HairStyle(hairStyle), HairColor(hairColor), FacialHair(facialHair), OutfitId(outfitId),
+                           Data(data), CharCount(0){}
+    // playerbot mod
+
     /// User specified variables
     std::string Name;
     uint8 Race = 0;
@@ -242,9 +250,37 @@ protected:
     uint8 FacialHair = 0;
     uint8 OutfitId = 0;
 
+    // playerbot mod
+    WorldPacket Data;
+    // end playerbot mod
+
     /// Server side data
     uint8 CharCount = 0;
 };
+
+// playerbot mod
+class BotCharacterCreateInfo
+{
+	friend class WorldSession;
+	friend class Player;
+
+public:
+	/// User specified variables
+	std::string Name;
+	uint8 Race = 0;
+	uint8 Class = 0;
+	uint8 Gender = GENDER_NONE;
+	uint8 Skin = 0;
+	uint8 Face = 0;
+	uint8 HairStyle = 0;
+	uint8 HairColor = 0;
+	uint8 FacialHair = 0;
+	uint8 OutfitId = 0;
+
+	/// Server side data
+	uint8 CharCount = 0;
+};
+// end playerbot mod
 
 struct CharacterRenameInfo
 {
@@ -869,6 +905,10 @@ public:                                                 // opcodes handlers
     void HandleBattlefieldLeaveOpcode(WorldPacket& recvData);
     void HandleBattlemasterJoinArena(WorldPacket& recvData);
     void HandleReportPvPAFK(WorldPacket& recvData);
+
+    // playerbot mod
+    void HandleBotPackets();
+    // end playerbot mod
 
     void HandleWardenDataOpcode(WorldPacket& recvData);
     void HandleWorldTeleportOpcode(WorldPacket& recvData);

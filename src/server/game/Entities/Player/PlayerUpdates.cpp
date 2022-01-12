@@ -421,6 +421,13 @@ void Player::Update(uint32 p_time)
         m_delayed_unit_relocation_timer = 0;
         RemoveFromNotify(NOTIFY_VISIBILITY_CHANGED);
     }
+
+    // Playerbot mod
+	if (m_playerbotAI)
+		m_playerbotAI->UpdateAI(p_time);
+	if (m_playerbotMgr)
+		m_playerbotMgr->UpdateAI(p_time);
+    // end playerbot mod
 }
 
 void Player::UpdateMirrorTimers()

@@ -50,6 +50,10 @@
 #include "WorldSocket.h"
 #include <zlib.h>
 
+// Playerbot mod:
+#include "../../modules/bot/playerbot/playerbot.h"
+// end playerbot mod
+
 namespace
 {
     std::string const DefaultPlayerName = "<none>";
@@ -254,6 +258,15 @@ void WorldSession::SendPacket(WorldPacket const* packet)
         return;
     }
 
+	// Playerbot mod: send packet to bot AI
+	if (GetPlayer()) {
+		if (GetPlayer()->GetPlayerbotAI())
+			GetPlayer()->GetPlayerbotAI()->HandleBotOutgoingPacket(*packet);
+		else if (GetPlayer()->GetPlayerbotMgr())
+			GetPlayer()->GetPlayerbotMgr()->HandleMasterOutgoingPacket(*packet);
+	}
+    // end playerbot mod
+
     LOG_TRACE("network.opcode", "S->C: %s %s", GetPlayerInfo().c_str(), GetOpcodeNameForLogging(static_cast<OpcodeServer>(packet->GetOpcode())).c_str());
     m_Socket->SendPacket(*packet);
 }
@@ -286,6 +299,10 @@ void WorldSession::LogUnprocessedTail(WorldPacket* packet)
 /// Update the WorldSession (triggered by World update)
 bool WorldSession::Update(uint32 diff, PacketFilter& updater)
 {
+	// Playerbot mod
+	if (GetPlayer() && GetPlayer()->GetPlayerbotAI()) return true;
+    // end playerbot mod
+
     ///- Before we process anything:
     /// If necessary, kick the player because the client didn't send anything for too long
     /// (or they've been idling in character select)
@@ -346,6 +363,12 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
 
                     opHandle->Call(this, *packet);
                     LogUnprocessedTail(packet);
+
+                    // playerbot mod
+                    // HCT_NOTE: not sure, should be called in Call()?
+                    if (_player && _player->GetPlayerbotMgr())
+                        _player->GetPlayerbotMgr()->HandleMasterIncomingPacket(*packet);
+                    // end playerbot mod
                 }
                 break;
             case STATUS_TRANSFER:
@@ -460,6 +483,12 @@ bool WorldSession::Update(uint32 diff, PacketFilter& updater)
     //logout procedure should happen only in World::UpdateSessions() method!!!
     if (updater.ProcessUnsafe())
     {
+        // playerbot mod
+        // HCT_NOTE: not sure
+        if (GetPlayer() && GetPlayer()->GetPlayerbotMgr())
+            GetPlayer()->GetPlayerbotMgr()->UpdateSessions(0);
+        // end playerbot mod
+
         if (m_Socket && m_Socket->IsOpen() && _warden)
         {
             _warden->Update(diff);
@@ -549,6 +578,12 @@ void WorldSession::LogoutPlayer(bool save)
         if (ObjectGuid lguid = _player->GetLootGUID())
             DoLootRelease(lguid);
 
+		// Playerbot mod: log out all player bots owned by this toon
+		if (GetPlayer()->GetPlayerbotMgr())
+			GetPlayer()->GetPlayerbotMgr()->LogoutAllBots();
+		sRandomPlayerbotMgr.OnPlayerLogout(_player);
+        // end playerbot mod
+
         ///- If the player just died before logging out, make him appear as a ghost
         //FIXME: logout must be delayed in case lost connection with client in time of combat
         if (_player->GetDeathTimer())
@@ -613,7 +648,9 @@ void WorldSession::LogoutPlayer(bool save)
         _player->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_CHANGE_MAP);
 
         ///- If the player is in a group (or invited), remove him. If the group if then only 1 person, disband the group.
-        _player->UninviteFromGroup();
+        // playerbot mod: remove player from group only if it is not a bot
+        if (_player->GetPlayerbotMgr()) _player->UninviteFromGroup();
+        // end playerbot mod
 
         // remove player from the group if he is:
         // a) in group; b) not in raid group; c) logging out normally (not being kicked or disconnected)
@@ -1612,3 +1649,15 @@ void WorldSession::SendTimeSync()
     _timeSyncTimer = _timeSyncNextCounter == 0 ? 5000 : 10000;
     _timeSyncNextCounter++;
 }
+
+// playerbot mod
+void WorldSession::HandleBotPackets()
+{
+	WorldPacket* packet;
+	while (_recvQueue.next(packet))
+	{
+		OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
+		(this->*opHandle.handler)(*packet);
+	}
+}
+// end playerbot mod

@@ -84,6 +84,11 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
+// Playerbot mod:
+#include "../../modules/bot/playerbot/playerbot.h"
+#include "../../modules/bot/playerbot/GuildTaskMgr.h"
+// end playerbot mod
+
 // TODO: this import is not necessary for compilation and marked as unused by the IDE
 //  however, for some reasons removing it would cause a damn linking issue
 //  there is probably some underlying problem with imports which should properly addressed
@@ -407,6 +412,11 @@ Player::Player(WorldSession* session): Unit(true), m_mover(this)
     m_isInstantFlightOn = true;
 
     sScriptMgr->OnConstructPlayer(this);
+
+    // playerbot mod
+	m_playerbotAI = nullptr;
+	m_playerbotMgr = nullptr;
+    // end playerbot mod
 }
 
 Player::~Player()
@@ -692,6 +702,14 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
 
     return true;
 }
+
+// playerbot mod
+bool Player::CreateBot(uint32 guidlow, BotCharacterCreateInfo* createInfo)
+{ 
+    Create(guidlow, createInfo);
+    learnDefaultSpells();
+}
+// end playerbot mod
 
 bool Player::StoreNewItemInBestSlots(uint32 titem_id, uint32 titem_amount)
 {

@@ -12,6 +12,10 @@
 
 message("")
 
+#if(BUILD_PLAYERBOT)
+#    add_subdirectory(bots)
+#endif()
+
 # Make the script module list available in the current scope
 GetModuleSourceList(MODULES_MODULE_LIST)
 

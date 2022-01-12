@@ -61,6 +61,11 @@ class PlayerSocial;
 class SpellCastTargets;
 class UpdateMask;
 
+// Playerbot mod
+class PlayerbotAI;
+class PlayerbotMgr;
+// end playerbot mod
+
 typedef std::deque<Mail*> PlayerMails;
 typedef void(*bgZoneRef)(Battleground*, WorldPacket&);
 
@@ -1081,6 +1086,10 @@ public:
     [[nodiscard]] time_t GetSummonExpireTimer() const { return m_summon_expire; }
 
     bool Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo);
+
+    // playerbot mod
+    bool CreateBot(uint32 guidlow, BotCharacterCreateInfo* createInfo);
+    // end playerbot mod
 
     void Update(uint32 time) override;
 
@@ -2603,6 +2612,16 @@ public:
     [[nodiscard]] PlayerSetting GetPlayerSetting(std::string source, uint8 index);
     void UpdatePlayerSetting(std::string source, uint8 index, uint32 value);
 
+    // Playerbot mod:
+    // A Player can either have a playerbotMgr (to manage its bots), or have playerbotAI (if it is a bot), or
+    // neither. Code that enables bots must create the playerbotMgr and set it using SetPlayerbotMgr.
+    EquipmentSets& GetEquipmentSets() { return m_EquipmentSets; }
+    void SetPlayerbotAI(PlayerbotAI* ai) { m_playerbotAI = ai; }
+    PlayerbotAI* GetPlayerbotAI() { return m_playerbotAI; }
+    void SetPlayerbotMgr(PlayerbotMgr* mgr) { m_playerbotMgr = mgr; }
+    PlayerbotMgr* GetPlayerbotMgr() { return m_playerbotMgr; }
+    void SetBotDeathTimer() { m_deathTimer = 0; }
+    // end player bot
  protected:
     // Gamemaster whisper whitelist
     WhisperListContainer WhisperList;
@@ -2966,6 +2985,12 @@ private:
     Optional<float> _farSightDistance = { };
 
     PlayerSettingMap m_charSettingsMap;
+
+    // Playerbot mod:
+    WorldLocation _corpseLocation;
+    PlayerbotAI* m_playerbotAI;
+    PlayerbotMgr* m_playerbotMgr;
+    // end playerbot mod
 };
 
 void AddItemsSetItem(Player* player, Item* item);

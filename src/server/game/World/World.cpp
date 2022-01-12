@@ -92,6 +92,11 @@
 #include <boost/asio/ip/address.hpp>
 #include <cmath>
 
+// playerbot mod
+#include "../../modules/bot/playerbot/playerbot.h"
+#include "../../modules/bot/playerbot/PlayerbotAIConfig.h"
+#include "../../modules/bot/playerbot/RandomPlayerbotMgr.h"
+
 namespace
 {
     TaskScheduler playersSaveScheduler;
@@ -2100,6 +2105,10 @@ void World::SetInitialWorldSettings()
         }
     }
 
+	// playerbot mod
+	sPlayerbotAIConfig.Initialize();
+    // end playerbot mod
+
     uint32 startupDuration = GetMSTimeDiffToNow(startupBegin);
 
     LOG_INFO("server.loading", " ");
@@ -2282,6 +2291,11 @@ void World::Update(uint32 diff)
         METRIC_TIMER("world_update_time", METRIC_TAG("type", "Reset guild cap"));
         ResetGuildCap();
     }
+
+	// playerbot mod
+	sRandomPlayerbotMgr.UpdateAI(diff);
+	sRandomPlayerbotMgr.UpdateSessions(diff);
+    // end playerbot mod
 
     // pussywizard:
     // acquire mutex now, this is kind of waiting for listing thread to finish it's work (since it can't process next packet)
@@ -2782,6 +2796,10 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode, const std:
         m_ShutdownTimer = time;
         ShutdownMsg(true, nullptr, reason);
     }
+
+	// playerbot mod
+	sRandomPlayerbotMgr.LogoutAllBots();
+    // end playerbot mod
 
     sScriptMgr->OnShutdownInitiate(ShutdownExitCode(exitcode), ShutdownMask(options));
 }
