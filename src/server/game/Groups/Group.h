@@ -301,7 +301,7 @@ public:
     void BroadcastGroupUpdate(void);
 
     // playerbot mod
-    uint64 GetTargetIcon(int index) { return m_targetIcons[index]; }
+    ObjectGuid GetTargetIcon(int index) { return m_targetIcons[index]; }
     Rolls* GetRolls() { return &RollId; }
     // end playerbot mod
 

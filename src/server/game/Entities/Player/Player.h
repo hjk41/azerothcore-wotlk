@@ -2976,7 +2976,6 @@ private:
     PlayerSettingMap m_charSettingsMap;
 
     // Playerbot mod:
-    WorldLocation _corpseLocation;
     PlayerbotAI* m_playerbotAI;
     PlayerbotMgr* m_playerbotMgr;
     // end playerbot mod
