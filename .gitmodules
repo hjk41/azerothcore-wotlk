@@ -3,4 +3,4 @@
 	url = https://github.com/ingydotnet/git-subrepo.git
 [submodule "modules/bot"]
 	path = src/server/playerbot
-	url = https://github.com/ike3/mangosbot-bots.git
+	url = https://github.com/hjk41/mangosbot-bots.git
