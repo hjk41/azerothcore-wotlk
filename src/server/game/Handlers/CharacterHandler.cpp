@@ -58,8 +58,8 @@
 #include "WorldSession.h"
 
 // Playerbot mod:
-#include "../../modules/bot/playerbot/playerbot.h"
-#include "../../modules/bot/playerbot/PlayerbotAIConfig.h"
+#include "playerbot.h"
+#include "PlayerbotAIConfig.h"
 // end playerbot mod
 
 class LoginQueryHolder : public CharacterDatabaseQueryHolder
@@ -84,7 +84,7 @@ private:
 	PlayerbotHolder* playerbotHolder;
 
 public:
-	PlayerbotLoginQueryHolder(PlayerbotHolder* playerbotHolder, uint32 masterAccount, uint32 accountId, uint64 guid)
+	PlayerbotLoginQueryHolder(PlayerbotHolder* playerbotHolder, uint32 masterAccount, uint32 accountId, ObjectGuid guid)
 		: LoginQueryHolder(accountId, guid), masterAccountId(masterAccount), playerbotHolder(playerbotHolder) { }
 
 public:
@@ -92,7 +92,7 @@ public:
 	PlayerbotHolder* GetPlayerbotHolder() { return playerbotHolder; }
 };
 
-void PlayerbotHolder::AddPlayerBot(uint64 playerGuid, uint32 masterAccount)
+void PlayerbotHolder::AddPlayerBot(ObjectGuid playerGuid, uint32 masterAccount)
 {
 	// has bot already been added?
 	Player* bot = ObjectAccessor::FindPlayer(playerGuid);
@@ -100,26 +100,21 @@ void PlayerbotHolder::AddPlayerBot(uint64 playerGuid, uint32 masterAccount)
 	if (bot && bot->IsInWorld())
 		return;
 
-	uint32 accountId = sObjectMgr->GetPlayerAccountIdByGUID(playerGuid);
+	uint32 accountId = sCharacterCache->GetCharacterAccountIdByGuid(playerGuid);
 	if (accountId == 0)
 		return;
 
-	PlayerbotLoginQueryHolder *holder = new PlayerbotLoginQueryHolder(this, masterAccount, accountId, playerGuid);
-	if (!holder->Initialize())
-	{
-		delete holder;                                      // delete all unprocessed queries
-		return;
-	}
+	std::shared_ptr<PlayerbotLoginQueryHolder> holder = std::make_shared<PlayerbotLoginQueryHolder>(this, masterAccount, accountId, playerGuid);
+	if (!holder->Initialize()) return;
 
-	QueryResultHolderFuture future = CharacterDatabase.DelayQueryHolder(holder);
-	SQLQueryHolder* param;
-	future.get(param);
+    CharacterDatabase.DelayQueryHolder(holder).m_future.get();
 
 	WorldSession* masterSession = masterAccount ? sWorld->FindSession(masterAccount) : NULL;
 	uint32 botAccountId = holder->GetAccountId();
-	WorldSession *botSession = new WorldSession(botAccountId, NULL, SEC_PLAYER, 2, 0, LOCALE_enUS, 0, false, true);
+    std::string account = "";
+	WorldSession *botSession = new WorldSession(botAccountId, std::move(account), NULL, SEC_PLAYER, 2, 0, LOCALE_enUS, 0, false, true, 0);
 
-	botSession->HandlePlayerLoginFromDB(holder); // will delete lqh
+	botSession->HandlePlayerLoginFromDB(*holder); // will delete lqh
 
 	bot = botSession->GetPlayer();
 	if (!bot)

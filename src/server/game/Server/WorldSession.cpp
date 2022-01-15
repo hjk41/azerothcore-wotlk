@@ -52,7 +52,7 @@
 #include <zlib.h>
 
 // Playerbot mod:
-#include "../../modules/bot/playerbot/playerbot.h"
+#include "playerbot.h"
 // end playerbot mod
 
 namespace
@@ -1656,8 +1656,8 @@ void WorldSession::HandleBotPackets()
 	WorldPacket* packet;
 	while (_recvQueue.next(packet))
 	{
-		OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
-		(this->*opHandle.handler)(*packet);
+		ClientOpcodeHandler const* opHandle = opcodeTable[static_cast<Opcodes>(packet->GetOpcode())];
+		opHandle->Call(this, *packet);
 	}
 }
 // end playerbot mod

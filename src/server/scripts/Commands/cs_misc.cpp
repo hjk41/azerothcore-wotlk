@@ -43,8 +43,8 @@
 #include "Tokenize.h"
 
 // playerbot mod
-#include "../../modules/bot/playerbot/playerbot.h"
-#include "../../modules/bot/playerbot/GuildTaskMgr.h"
+#include "playerbot.h"
+#include "GuildTaskMgr.h"
 // end playerbot mod
 
 // TODO: this import is not necessary for compilation and marked as unused by the IDE

@@ -86,8 +86,8 @@
 #include "WorldSession.h"
 
 // Playerbot mod:
-#include "../../modules/bot/playerbot/playerbot.h"
-#include "../../modules/bot/playerbot/GuildTaskMgr.h"
+#include "playerbot.h"
+#include "GuildTaskMgr.h"
 // end playerbot mod
 
 // TODO: this import is not necessary for compilation and marked as unused by the IDE
@@ -705,8 +705,9 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
 // playerbot mod
 bool Player::CreateBot(uint32 guidlow, BotCharacterCreateInfo* createInfo)
 { 
-    Create(guidlow, createInfo);
-    learnDefaultSpells();
+    if (!Create(guidlow, createInfo)) return false;
+    // LearnDefaultSpells();
+    return true;
 }
 // end playerbot mod
 

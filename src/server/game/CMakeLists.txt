@@ -33,6 +33,14 @@ CollectIncludeDirectories(
   # Exclude
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders)
 
+CollectIncludeDirectories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../worldserver/playerbot/playerbot
+  PUBLIC_INCLUDES
+  # Exclude
+  ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders)
+
+message("game includes: ${PUBLIC_INCLUDES}")
+
 target_include_directories(game-interface
   INTERFACE
     ${PUBLIC_INCLUDES})

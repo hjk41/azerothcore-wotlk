@@ -47,6 +47,8 @@ CollectIncludeDirectories(
   # Exclude
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders)
 
+add_subdirectory(playerbot)
+
 target_include_directories(worldserver
   PUBLIC
     ${PUBLIC_INCLUDES}

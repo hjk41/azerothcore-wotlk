@@ -41,7 +41,7 @@
 #include "WorldSession.h"
 
 // Playerbot mod:
-#include "../../modules/bot/playerbot/playerbot.h"
+#include "playerbot.h"
 // end playerbot mod
 
 inline bool isNasty(uint8 c)

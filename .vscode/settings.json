@@ -67,7 +67,8 @@
         "typeinfo": "cpp",
         "codecvt": "cpp",
         "xstring": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "future": "cpp"
     },
     "deno.enable": true,
     "deno.path": "deps/deno/bin/deno",

@@ -94,9 +94,9 @@
 #include <cmath>
 
 // playerbot mod
-#include "../../modules/bot/playerbot/playerbot.h"
-#include "../../modules/bot/playerbot/PlayerbotAIConfig.h"
-#include "../../modules/bot/playerbot/RandomPlayerbotMgr.h"
+#include "playerbot.h"
+#include "PlayerbotAIConfig.h"
+#include "RandomPlayerbotMgr.h"
 
 namespace
 {
