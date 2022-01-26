@@ -15,6 +15,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string_view>
+
 #include "AccountMgr.h"
 #include "ArenaTeamMgr.h"
 #include "BattlegroundMgr.h"
@@ -142,12 +144,28 @@ public:
             { "string",            HandleStringCommand,            SEC_GAMEMASTER,         Console::No  },
 
             // playerbot mod
-			{ "rndbot",				SEC_GAMEMASTER,         true,  &RandomPlayerbotMgr::HandlePlayerbotConsoleCommand,     "" },
-			{ "bot",				SEC_PLAYER,				false, &PlayerbotMgr::HandlePlayerbotMgrCommand,               "" },
-			{ "gtask",				SEC_GAMEMASTER,         true,  &GuildTaskMgr::HandleConsoleCommand,           "" },
+			{ "rndbot",			   HandleRndBotCommand,	           SEC_GAMEMASTER,         Console::Yes },
+			{ "bot",			   HandleBotCommand,               SEC_PLAYER,		       Console::No  },
+			{ "gtask",			   HandleGtaskCommand,             SEC_GAMEMASTER,         Console::Yes },
+            // end playerbot mod
         };
 
         return commandTable;
+    }
+
+    static bool HandleRndBotCommand(ChatHandler* handler, std::string_view args)
+    {
+        return RandomPlayerbotMgr::HandlePlayerbotConsoleCommand(handler, args);
+    }
+
+    static bool HandleBotCommand(ChatHandler* handler, std::string_view args)
+    {
+        return PlayerbotMgr::HandlePlayerbotMgrCommand(handler, args);
+    }
+
+    static bool HandleGtaskCommand(ChatHandler* handler, std::string_view args)
+    {
+        return GuildTaskMgr::HandleConsoleCommand(handler, args);        
     }
 
     static bool HandleSkirmishCommand(ChatHandler* handler, std::string_view args)

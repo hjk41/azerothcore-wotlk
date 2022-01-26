@@ -2614,6 +2614,7 @@ public:
     void SetPlayerbotMgr(PlayerbotMgr* mgr) { m_playerbotMgr = mgr; }
     PlayerbotMgr* GetPlayerbotMgr() { return m_playerbotMgr; }
     void SetBotDeathTimer() { m_deathTimer = 0; }
+    bool MinimalLoadFromDB(QueryResult result, uint32 guid);
     // end player bot
  protected:
     // Gamemaster whisper whitelist

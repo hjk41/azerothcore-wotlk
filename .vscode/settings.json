@@ -68,7 +68,11 @@
         "codecvt": "cpp",
         "xstring": "cpp",
         "variant": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "strstream": "cpp",
+        "charconv": "cpp",
+        "regex": "cpp",
+        "typeindex": "cpp"
     },
     "deno.enable": true,
     "deno.path": "deps/deno/bin/deno",
