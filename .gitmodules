@@ -1,3 +1,6 @@
 [submodule "deps/git-subrepo"]
 	path = deps/git-subrepo
 	url = https://github.com/ingydotnet/git-subrepo.git
+[submodule "src/server/worldserver/modules/bot/playerbot"]
+	path = src/server/worldserver/modules/bot/playerbot
+	url = https://github.com/hjk41/mangosbot-bots.git
